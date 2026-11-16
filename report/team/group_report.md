@@ -4,7 +4,7 @@ Tối đa 5 trang ngoài phụ lục. Số liệu lấy từ file trong `src/rep
 
 ## 1. Thông tin nhóm
 
-- Tên nhóm: (nhóm điền)
+- Tên nhóm: Nhom3Nguoi
 - Thành viên: xem `TEAM.md`
 - Commit chốt (trùng `report/team/decision_adr.md`): xem dòng `Commit hash` trong ADR
 
@@ -49,7 +49,7 @@ Bộ public, 14 claim × 5 seed = 70 trial mỗi shape (`src/reports/benchmark.j
 - Không có trial `error` hay `leak_suspect`. Trial fail duy nhất: `R-swarm-C-002-s55` (swarm tin "trễ 5 ngày" trong ticket, order ghi 2 ngày).
 - Crash safety: **20/20** (`src/reports/crash.json`), gồm crash trước effect, sau effect trước checkpoint, sau checkpoint, đổi số tiền khi retry, retry không approval.
 - Must-pass: approval bypass 0, secret leak 0 (quét 186 trace của 3 shape), crash 20/20.
-- Tự kiểm hidden: chưa chạy vì chưa nhận `student_drop/`.
+- Tự kiểm hidden (`src/reports/hidden_selfcheck.json`): 40 claim × 5 seed, cả 3 shape chạy hết 600 trial, 0 trial `error`, 0 `leak_suspect`, trace đúng contract. Phân bố status của workflow: denied 95, resolved 90, escalated 10, needs_info 5; single và orchestrator ra cùng phân bố. Không có nhãn nên pass rate hidden do grader giảng viên chấm.
 - Bonus B3: verifier bằng code đưa swarm lên 1.000 / 1.000 trên cả public và bộ đối kháng 10 claim, nhưng cost/success vẫn gấp khoảng 1,8 lần workflow (`report/team/bonus_report.md`).
 
 Quyết định kiến trúc và lý do: xem `report/team/decision_adr.md` (chọn **workflow**). Phiếu nghiên cứu và ablation: xem `report/team/research_card.md` (R2, MAST).
@@ -69,7 +69,7 @@ Chi tiết đóng góp của từng thành viên nằm trong `TEAM.md` (bảng �
 ## 7. Hạn chế và hướng cải thiện
 
 - MockLLM không phải model sản xuất; latency là `unavailable`; cost là VND mô phỏng. Text của MockLLM không ảnh hưởng quyết định, nên số model call chỉ phản ánh cost.
-- Mới đo trên 14 claim public và 10 claim đối kháng tự viết. Bộ hidden 40 claim chưa self-check.
+- Pass rate mới đo trên 14 claim public và 10 claim đối kháng tự viết. Bộ hidden 40 claim chỉ tự kiểm được format, lỗi và leak (không có nhãn).
 - Kết luận chọn workflow đảo lại nếu bộ hidden có dạng claim luật cố định không biểu diễn được (bằng chứng dạng văn bản tự do, ảnh), làm workflow rớt dưới 0.75 trong khi shape agentic vượt ngưỡng với pass^5 ổn định; hoặc khi số loại claim tăng tới mức bảo trì if/else đắt hơn chi phí model.
 
 ## 8. Tài liệu tham khảo

@@ -27,4 +27,4 @@ Cả 3 shape ghi `traces/<run_id>.json` (`{run_id, steps, events}`) trên mọi 
 
 ## Giới hạn
 
-MockLLM không phải model sản xuất: text của nó không ảnh hưởng quyết định, nên số model call chỉ phản ánh cost, không phản ánh độ đúng của một LLM thật. Latency để `unavailable`. Cost là VND mô phỏng theo `src/config/pricing.yaml`, không phải hóa đơn API. Kết quả mới đo trên 14 claim public. Bộ hidden (40 claim) chưa chạy self-check vì chưa có `student_drop/`. Không sửa JSON cho đủ 0.75.
+MockLLM không phải model sản xuất: text của nó không ảnh hưởng quyết định, nên số model call chỉ phản ánh cost, không phản ánh độ đúng của một LLM thật. Latency để `unavailable`. Cost là VND mô phỏng theo `src/config/pricing.yaml`, không phải hóa đơn API. Pass rate đo trên 14 claim public. Tự kiểm hidden (`src/reports/hidden_selfcheck.json`, `student_drop/` không nhãn): 40 claim × 5 seed × 3 shape = 600 trial, 0 trial `error`, 0 `leak_suspect`, trace đúng contract; pass rate hidden chính thức do grader của giảng viên chấm. Không sửa JSON cho đủ 0.75.
