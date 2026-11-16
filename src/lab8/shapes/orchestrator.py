@@ -28,7 +28,7 @@ import sqlite3
 from typing import Any
 
 from lab8.db import connect
-from lab8.durability import issue_refund
+from lab8.durability import InjectedCrash, issue_refund
 from lab8.handoff import make_handoff
 from lab8.mock_llm import complete
 from lab8.runtime import run_readonly_investigators
@@ -77,6 +77,11 @@ def _run(conn: sqlite3.Connection, claim_id: str, *, seed: int, crash_at: str | 
 
     try:
         return _steps(conn, claim_id, seed=seed, budget=budget, trace=trace, crash_at=crash_at, done=done)
+    except InjectedCrash:
+        # Fault-lab crash: flush the trace, then let it propagate (T12 checks it fired).
+        trace.add("crash", {"at": crash_at})
+        trace.write()
+        raise
     except Exception as exc:  # run_claim must never raise (HandoffError included).
         return done("failed", 0, f"exception:{type(exc).__name__}")
 
@@ -129,9 +134,8 @@ def _steps(conn, claim_id, *, seed: int, budget: Budget, trace: Trace, crash_at,
     if amount <= 0:
         return done("denied", 0, quote["reason"])
 
-    # Host is the only writer. Pass the FULL quote.
-    # TODO CP3 (student): truyền crash_at vào durability.issue_refund, không bắt InjectedCrash.
-    outcome = issue_refund(conn, claim_id, amount)
+    # Host is the only writer. Pass the FULL quote and crash_at through.
+    outcome = issue_refund(conn, claim_id, amount, crash_at=crash_at)
     trace.add("issue_refund", {"ok": outcome["ok"], "reason": outcome["reason"], "conflict": outcome["conflict"]})
     if outcome["ok"]:
         return done("resolved", amount, None)
