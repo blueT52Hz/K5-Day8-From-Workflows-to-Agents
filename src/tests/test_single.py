@@ -53,9 +53,10 @@ def _base_world() -> dict:
                 "clauses": [
                     {
                         "clause_id": "SHIP-LATE-01",
-                        "type": "shipping_delay",
+                        "kind": "late_delivery",
                         "min_delay_days": 3,
-                        "refund_rate": 1.0,
+                        "refund_basis": "shipping_fee",
+                        "eligible_statuses": ["delivered", "delivered_late"],
                     }
                 ],
             }
@@ -65,14 +66,14 @@ def _base_world() -> dict:
                 "approval_id": "APP-101",
                 "claim_id": "C-101",
                 "approved_vnd": 35000,
-                "status": "approved",
+                "status": "valid",
                 "expires_at": "2026-12-31",
             },
             {
                 "approval_id": "APP-102",
                 "claim_id": "C-102",
                 "approved_vnd": 30000,
-                "status": "approved",
+                "status": "valid",
                 "expires_at": "2026-12-31",
             },
         ],

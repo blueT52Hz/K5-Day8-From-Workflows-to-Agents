@@ -45,7 +45,7 @@
 ## 4. Bằng chứng
 
 - Test thêm: `src/tests/test_bonus_swarm_verified.py` - 44 test (phát hiện field lệch, sửa C-002 seed 55, im lặng khi dữ kiện khớp, 10 claim × 2 shape × 2 seed theo nhãn tay, crash vẫn 1 refund).
-- Ma trận student: 248/248; `python -m pytest -q`: 98 passed.
+- Ma trận student: 248/248; `python -m pytest -q`: 123 passed (gồm test của cả nhóm).
 - `src/reports/crash.json`: crash_safety 20/20.
 - `src/reports/benchmark.json`: orchestrator 1.000 / 1.000, cost/success 38.03 VND; workflow 1.000 / 1.000, 27.86 VND.
 - `src/reports/hidden_selfcheck.json`: 600 trial, 0 error, 0 leak_suspect.

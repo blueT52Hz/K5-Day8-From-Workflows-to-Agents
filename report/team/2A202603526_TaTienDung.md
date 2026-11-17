@@ -1,4 +1,4 @@
-# Báo cáo cá nhân — 2A202603526_TaTienDung
+# Báo cáo cá nhân - 2A202603526_TaTienDung
 
 ## 1. Thông tin thành viên
 
@@ -18,7 +18,7 @@
 
 ## 3. Đóng góp cụ thể
 
-- **Commit chính:** `705683c` (`705683c9a284b2aea9c87a1c75555965d7a6bf05`) — Cài đặt Shape B (`src/lab8/shapes/single.py`) và bổ sung unit test tại `src/tests/test_single.py`.
+- **Commit chính:** `705683c` (`705683c9a284b2aea9c87a1c75555965d7a6bf05`) - cài đặt Shape B (`src/lab8/shapes/single.py`); `7da686e` - bổ sung unit test tại `src/tests/test_single.py`.
 - **Các quyết định kỹ thuật trọng tâm trong `src/lab8/shapes/single.py`:**
   1. **Kiểm soát vòng lặp ReAct và ranh giới quyền hạn (`worker=True`):** Sử dụng `lab8.runtime.run_react` với giới hạn `max_steps=8` và cờ `worker=True` để khóa quyền gọi tool của agent, chỉ cho phép gọi các read tool (`get_claim_view`, `lookup_order`, `lookup_refund_history`, `compute_compensation`) và ngăn chặn việc agent tự ý gọi write tool.
   2. **Tách bạch dữ liệu người dùng và nguồn sự thật (Chống Prompt Injection):** Gọi `mock_llm.complete(..., purpose="parse")` để mô phỏng bước đọc hiểu ticket và hạch toán chi phí token vào `Budget`, nhưng không tin tưởng số ngày trễ hay mã đơn trích xuất từ văn bản ticket. Mọi quyết định về quyền sở hữu đơn (`principal_id`), lịch sử hoàn tiền và số tiền bồi thường đều được truy xuất trực tiếp từ cơ sở dữ liệu qua `lookup_order` và `compute_compensation` (đã lọc theo policy hiện hành `is_current=1`).
@@ -28,14 +28,15 @@
 ## 4. Bằng chứng
 
 - **Commit trên nhánh `main`:** `https://github.com/blueT52Hz/K5-L3A-DAY08-Nhom3Nguoi-FromWorkflowsToAgents/commit/705683c9a284b2aea9c87a1c75555965d7a6bf05`
-- **Kết quả kiểm thử Student Tests (CP2 & CP3 — bao gồm T11 Idempotency, T12 Crash/Resume, T13–T14 Per-order Cap):**
+- **Kết quả kiểm thử Student Tests (CP2 & CP3 - bao gồm T11 Idempotency, T12 Crash/Resume, T13-T14 Per-order Cap):**
   - Lệnh chạy: `python -m pytest -q -m student -o addopts= -k "single and not workflow and not orchestrator and not swarm"`
   - Kết quả: Đạt **62 passed**.
 - **Unit test riêng cho Shape B (`src/tests/test_single.py`):**
   - Lệnh chạy: `python -m pytest -q tests/test_single.py`
-  - Kết quả: Đạt **4 passed** (kiểm tra luồng chuẩn, chống prompt injection và rò rỉ secret/PII trong trace, nhánh `needs_info`/`escalated`, idempotency và crash/resume tại `after_effect_before_checkpoint`).
+  - Kết quả: **4 passed** (kiểm tra luồng chuẩn, chống prompt injection và rò rỉ secret/PII trong trace, nhánh `needs_info`/`escalated`, idempotency và crash/resume tại `after_effect_before_checkpoint`).
+  - Ghi chú: bản đầu ở commit `7da686e` có 3/4 test fail (`KeyError: 'kind'`) vì fixture `_base_world()` dùng clause sai schema (`type`/`refund_rate`) và approval `status: "approved"`. Đã sửa theo schema thật (`kind: "late_delivery"`, `refund_basis: "shipping_fee"`, `eligible_statuses`, approval `status: "valid"`), sau đó 4/4 pass.
 - **Kết quả Benchmark (`src/reports/benchmark.json`):** Shape `single` đạt pass rate **1.000**, pass^5 **1.000**, variance **0**, cost/success **37.85 VND** mô phỏng, p95 **7 bước**.
-- **Cổng kiểm thử Host:** `python -m pytest -q` duy trì trạng thái xanh xuyên suốt quá trình phát triển và sau khi tích hợp.
+- **Cổng kiểm thử Host:** `python -m pytest -q` sau khi sửa fixture: **123 passed**.
 
 ## 5. Công cụ AI đã dùng
 
@@ -45,9 +46,9 @@
   - Hỗ trợ thiết kế cấu trúc hàm `decide` cho vòng lặp ReAct trong `src/lab8/shapes/single.py` và rà soát các trường hợp biên (thiếu `order_id`, sai quyền sở hữu đơn, hoàn tiền nhiều lần trên cùng một đơn, xử lý ngoại lệ `InjectedCrash`).
 - **Cách tự kiểm tra và xác minh kết quả (tuân thủ `RULES.md`):**
   - Trực tiếp đọc hiểu mã nguồn được gợi ý, kiểm tra lại từng nhánh điều kiện và đối chiếu với schema của `RunResult` và `Trace`.
-  - Tự thực thi bộ test tự động trên môi trường `.venv` cục bộ (`python -m pytest -q`, `python -m pytest -q -m student -o addopts= -k "single and not workflow and not orchestrator and not swarm"`, và `python -m pytest -q tests/test_single.py`) để xác minh kết quả trước khi commit code lên repository nhóm.
+  - Tự thực thi bộ test tự động trên môi trường `.venv` cục bộ (`python -m pytest -q`, `python -m pytest -q -m student -o addopts= -k "single and not workflow and not orchestrator and not swarm"`, và `python -m pytest -q tests/test_single.py`) để xác minh kết quả. Bài học: lần đầu commit `tests/test_single.py` khi chưa chạy lại toàn bộ `pytest -q` nên lọt lỗi fixture; sau đó đã sửa và chạy lại cả bộ.
 
 ## 6. Tự đánh giá
 
-- **Mức độ hoàn thành:** Hoàn thành đầy đủ các đầu việc kỹ thuật của vai trò Single Agent Engineer đúng tiến độ phân công (CP1–CP4), đảm bảo tuân thủ ranh giới bảo mật và nguyên tắc thiết kế "code quyết định tiền, model chỉ đọc và soạn thảo".
+- **Mức độ hoàn thành:** Hoàn thành đầy đủ các đầu việc kỹ thuật của vai trò Single Agent Engineer đúng tiến độ phân công (CP1-CP4), đảm bảo tuân thủ ranh giới bảo mật và nguyên tắc thiết kế "code quyết định tiền, model chỉ đọc và soạn thảo".
 - **Bài học rút ra:** Hiểu rõ sự đánh đổi giữa tính tự chủ của agent và độ tin cậy của hệ thống: việc giới hạn số bước (`max_steps=8`), khóa quyền ghi tool (`worker=True`) và tách biệt dữ liệu đầu vào không đáng tin cậy (ticket) khỏi nguồn sự thật (DB) là yếu tố then chốt giúp kiến trúc Single Agent vừa linh hoạt trong việc điều phối tool đọc, vừa đạt độ nhất quán cao qua nhiều seed.

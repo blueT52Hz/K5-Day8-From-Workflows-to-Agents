@@ -21,8 +21,8 @@
 
 | Người            | Vai                                                          | Commit                                    | Test đã thêm hoặc sửa                    |
 | ------------------ | ------------------------------------------------------------ | ----------------------------------------- | --------------------------------------------- |
-| Nguyễn Hữu Đức | Workflow, test hồi quy, kiểm host/crash và ADR bản nháp | `0ef1f6435cfc295f56e87e7e10485a684a21b2bb` (workflow; test và report chưa commit) | `src/tests/test_workflow.py` (21 trường hợp) |
-| Tạ Tiến Dũng | Single agent (ReAct): `run_react` tối đa 8 bước, chỉ tool đọc, host ghi tiền | `705683c` (Implement Shape B) | (chưa có test riêng; single qua 62 test student) |
+| Nguyễn Hữu Đức | Workflow, test hồi quy, kiểm host/crash, đóng góp ADR | `0ef1f64` (workflow), `f909084` (test workflow) | `src/tests/test_workflow.py` (21 trường hợp) |
+| Tạ Tiến Dũng | Single agent (ReAct): `run_react` tối đa 8 bước, chỉ tool đọc, host ghi tiền | `705683c` (Implement Shape B), `7da686e` (test single) | `src/tests/test_single.py` (4 test) |
 | Nguyễn Hoa Thanh Tùng | Orchestrator + handoff allowlist, crash suite, benchmark 4 shape, hidden self-check, bonus B3, demo/slide | `b612394` (tích hợp orchestrator, bonus B3, reports, docs) | `src/tests/test_bonus_swarm_verified.py` (44 test) |
 
 ## Cá nhân
@@ -37,10 +37,10 @@ Báo cáo đầy đủ của từng thành viên:
 
 ### Phần việc phụ trách
 
-- Triển khai kiến trúc A — workflow trong `src/lab8/shapes/workflow.py`.
+- Triển khai kiến trúc A - workflow trong `src/lab8/shapes/workflow.py` (shape được chọn trong ADR).
 - Bổ sung test nghiệp vụ, approval, retry, crash/resume và trace an toàn.
-- Kiểm tra host gate, chạy crash suite và tạo benchmark baseline workflow so với swarm.
-- Chuẩn bị ADR bản nháp; phụ trách tích hợp và cập nhật ADR cùng nhóm khi single và orchestrator hoàn thành.
+- Kiểm tra host gate, chạy crash suite và benchmark workflow so với swarm.
+- Soạn ADR bản đầu; nhóm hoàn thiện ADR sau khi benchmark đủ 4 shape.
 
 ### Đóng góp cụ thể
 
@@ -53,14 +53,14 @@ Báo cáo đầy đủ của từng thành viên:
 
 ### Bằng chứng
 
-- Commit triển khai workflow: `0ef1f6435cfc295f56e87e7e10485a684a21b2bb` (`update workflow.py`). Test bổ sung và report hiện chưa commit; cần bổ sung hash chứa các file này trước khi nộp.
+- Commit: `0ef1f64` (triển khai workflow), `f909084` (thêm `src/tests/test_workflow.py`).
 - Môi trường đã kiểm tra: Windows AMD64, Python 3.12.7, pytest 8.4.2, PyYAML 6.0.3.
-- `python -m pytest -q`: **75 passed, 248 deselected**.
+- `python -m pytest -q tests/test_workflow.py`: **21 passed**.
 - `python -m pytest -q -m student -o addopts= -k workflow`: **62 passed**, gồm T11 retry và T12 crash/resume.
 - [Crash report](src/reports/crash.json): **20/20** cho suite host/swarm. Test workflow bổ sung kiểm riêng cả `before_effect`, `after_effect_before_checkpoint` và `after_checkpoint`.
-- [Benchmark baseline](src/reports/workflow_baseline.json): workflow đúng **70/70 trial** trên 14 claim × 5 seed; pass rate = **1.0**, pass^5 = **1.0**, variance = **0**, cost/success ≈ **27.86 VND mô phỏng**. Swarm cùng điều kiện đúng 69/70 trial, cost/success ≈ 49.57 VND mô phỏng.
+- [Benchmark](src/reports/benchmark.json): workflow đúng **70/70 trial** trên 14 claim × 5 seed; pass rate **1.000**, pass^5 **1.000**, variance **0**, cost/success **27.86 VND mô phỏng** (thấp nhất trong 4 shape). Swarm cùng điều kiện 0.986 / 0.929, 49.57 VND.
 - Run id minh họa: `R-workflow-C-001-s11`, `R-workflow-C-002-s55`, `R-workflow-C-014-s55`.
-- [Báo cáo cá nhân](report/team/2A202603429_NguyenHuuDuc.md) và [ADR bản nháp](report/team/decision_adr.md). Chưa có kết quả hidden; quyết định kiến trúc cuối cùng cần benchmark đủ bốn shape sau khi tích hợp.
+- [Báo cáo cá nhân](report/team/2A202603429_NguyenHuuDuc.md) và [ADR](report/team/decision_adr.md) (chọn workflow).
 
 ## 2A202603526_TaTienDung
 
@@ -74,11 +74,10 @@ Báo cáo đầy đủ của từng thành viên:
 - Quote lấy từ kết quả `compute_compensation` trên order row, không lấy số trong ticket; ticket chỉ là dữ liệu không tin cậy.
 - Host gọi `durability.issue_refund` với quote đầy đủ sau vòng lặp, truyền `crash_at`, chỉ bắt `InjectedCrash` để ghi trace rồi ném lại.
 - Trace ghi `react_step`, `observation` (visible, reason, số tiền đã hoàn), `quote`; không ghi ticket hay row thô.
-- | Tạ Tiến Dũng | Single agent (ReAct): `run_react` tối đa 8 bước, chỉ tool đọc, host ghi tiền | `705683c` (Implement Shape B) | `src/tests/test_single.py` (4 test) |
 
 ### Bằng chứng
 
-- Commit: `705683c` (Implement Shape B (Single Agent ReAct)).
+- Commit: `705683c` (Implement Shape B (Single Agent ReAct)), `7da686e` (thêm `src/tests/test_single.py`).
 - `python -m pytest -q -m student -o addopts= -k "single and not workflow and not orchestrator and not swarm"`: 62 passed.
 - `src/reports/benchmark.json`: single 1.000 / 1.000, cost/success 37.85 VND, p95 7 bước.
 - Báo cáo cá nhân: `report/team/2A202603526_TaTienDung.md`.
