@@ -51,7 +51,7 @@
 - `src/reports/hidden_selfcheck.json`: 600 trial, 0 error, 0 leak_suspect.
 - `src/reports/bonus_benchmark.json`, `bonus_adversarial.json`, `bonus_verifier.json`: swarm 0.986 / 0.929 (public) và 0.900 / 0.500 (đối kháng) lên 1.000 / 1.000; 7 lần `verifier_override`, 6 lần đổi số tiền.
 - Run id: `R-orchestrator-C-012-s11` (crash rồi resume, 1 refund), `R-swarm_verified-C-002-s55` so với `R-swarm-C-002-s55`.
-- Commit: commit tích hợp trên `main` (hash ghi trong `report/team/decision_adr.md`).
+- Commit: `b612394` trên `main` (tích hợp orchestrator, bonus B3, `src/reports/*.json`, tài liệu nhóm).
 
 ## 5. Công cụ AI đã dùng
 

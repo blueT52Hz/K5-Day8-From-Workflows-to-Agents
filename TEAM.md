@@ -28,7 +28,7 @@ Gợi ý chia vai:
 | ------------------ | ------------------------------------------------------------ | ----------------------------------------- | --------------------------------------------- |
 | Nguyễn Hữu Đức | Workflow, test hồi quy, kiểm host/crash và ADR bản nháp | `0ef1f6435cfc295f56e87e7e10485a684a21b2bb` (workflow; test và report chưa commit) | `src/tests/test_workflow.py` (21 trường hợp) |
 | Tạ Tiến Dũng | Single agent (ReAct): `run_react` tối đa 8 bước, chỉ tool đọc, host ghi tiền | `705683c` (Implement Shape B) | (chưa có test riêng; single qua 62 test student) |
-| Nguyễn Hoa Thanh Tùng | Orchestrator + handoff allowlist, crash suite, benchmark 4 shape, hidden self-check, bonus B3, demo/slide | (commit tích hợp trên main, điền sau khi commit) | `src/tests/test_bonus_swarm_verified.py` (44 test) |
+| Nguyễn Hoa Thanh Tùng | Orchestrator + handoff allowlist, crash suite, benchmark 4 shape, hidden self-check, bonus B3, demo/slide | `b612394` (tích hợp orchestrator, bonus B3, reports, docs) | `src/tests/test_bonus_swarm_verified.py` (44 test) |
 
 ## Cá nhân
 
