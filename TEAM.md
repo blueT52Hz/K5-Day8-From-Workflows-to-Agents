@@ -48,9 +48,8 @@ Báo cáo đầy đủ của từng thành viên:
 - Dùng dữ liệu đơn hàng làm nguồn sự thật; không lấy số ngày hoặc chỉ dẫn trong ticket để quyết định số tiền. Workflow không gọi model.
 - Truyền quote đầy đủ vào `durability.issue_refund` để host kiểm approval và trừ khoản đã hoàn theo đơn; không tự trừ trước. Phân biệt kết quả bị từ chối (`denied`) với xung đột số tiền khi retry (`failed`).
 - Truyền `crash_at` cho host, để `InjectedCrash` truyền ra runner và luôn đóng connection trong `finally`; xác minh resume/retry chỉ giữ một refund và một audit committed.
-- Chỉ ghi metadata và dữ liệu đã lọc vào trace; không ghi ticket, secret, header, SĐT, địa chỉ, tên hàng hoặc ghi chú nội bộ.
 - Thêm 21 trường hợp trong `src/tests/test_workflow.py`: nhánh trả sớm, approval sai/thiếu/hết hạn, policy tương lai, đơn không hợp lệ, trần hoàn tiền giữa các claim, amount conflict, ba điểm crash cho refund thường và top-up, cùng kiểm tra rò dữ liệu.
-- Sinh report bằng CLI và điền `report/team/decision_adr.md` ở trạng thái bản nháp dựa trên số liệu thực tế.
+
 
 ### Bằng chứng
 
