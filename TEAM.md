@@ -15,11 +15,6 @@
 |   2 | Tạ Tiến Dũng | 2A202603526 | | [@tiendung832005](https://github.com/tiendung832005) | Single agent (ReAct) |
 |   3 | Nguyễn Hoa Thanh Tùng | 2A202603519 | 26ai.tungnht2@vinuni.edu.vn | [@bluet52hz](https://github.com/bluet52hz) | Orchestrator + handoff, crash suite, benchmark, bonus B3, demo/slide |
 
-Gợi ý chia vai:
-
-- Nhóm 6 người: integration; workflow; single agent; orchestrator; ledger/policy/crash; eval/report.
-- Nhóm 4 người: workflow + integration; single; orchestrator + handoff; ledger + evaluation.
-
 ## Bảng đóng góp
 
 `python -m lab8.check_submission` đọc bảng này bằng máy: giữ nguyên tiêu đề `## Bảng đóng góp` và các cột. Mỗi người một dòng: commit có nội dung và ít nhất một test đã thêm hoặc sửa.
@@ -32,23 +27,11 @@ Gợi ý chia vai:
 
 ## Cá nhân
 
-Mỗi thành viên đồng thời tạo một báo cáo riêng trong `report/` theo dạng:
+Báo cáo đầy đủ của từng thành viên:
 
-```text
-report/team/MSSV_HoTen.md
-```
-
-Ví dụ: `report/team/20241234_NguyenVanAn.md`.
-
-Sao chép mục dưới đây cho từng thành viên.
-
-## MSSV_HoTen
-
-### Phần việc phụ trách
-
-### Đóng góp cụ thể
-
-### Bằng chứng
+- `report/team/2A202603429_NguyenHuuDuc.md`
+- `report/team/2A202603526_TaTienDung.md`
+- `report/team/2A202603519_NguyenHoaThanhTung.md`
 
 ## 2A202603429_NguyenHuuDuc
 
@@ -79,3 +62,44 @@ Sao chép mục dưới đây cho từng thành viên.
 - [Benchmark baseline](src/reports/workflow_baseline.json): workflow đúng **70/70 trial** trên 14 claim × 5 seed; pass rate = **1.0**, pass^5 = **1.0**, variance = **0**, cost/success ≈ **27.86 VND mô phỏng**. Swarm cùng điều kiện đúng 69/70 trial, cost/success ≈ 49.57 VND mô phỏng.
 - Run id minh họa: `R-workflow-C-001-s11`, `R-workflow-C-002-s55`, `R-workflow-C-014-s55`.
 - [Báo cáo cá nhân](report/team/2A202603429_NguyenHuuDuc.md) và [ADR bản nháp](report/team/decision_adr.md). Chưa có kết quả hidden; quyết định kiến trúc cuối cùng cần benchmark đủ bốn shape sau khi tích hợp.
+
+## 2A202603526_TaTienDung
+
+### Phần việc phụ trách
+
+- Triển khai kiến trúc B - single agent ReAct trong `src/lab8/shapes/single.py`.
+
+### Đóng góp cụ thể
+
+- Dùng `lab8.runtime.run_react` với `max_steps=8` và `worker=True`: agent chỉ được gọi tool đọc (`get_claim_view`, `lookup_order`, `lookup_refund_history`, `compute_compensation`), không có tool ghi.
+- Quote lấy từ kết quả `compute_compensation` trên order row, không lấy số trong ticket; ticket chỉ là dữ liệu không tin cậy.
+- Host gọi `durability.issue_refund` với quote đầy đủ sau vòng lặp, truyền `crash_at`, chỉ bắt `InjectedCrash` để ghi trace rồi ném lại.
+- Trace ghi `react_step`, `observation` (visible, reason, số tiền đã hoàn), `quote`; không ghi ticket hay row thô.
+
+### Bằng chứng
+
+- Commit: `705683c` (Implement Shape B (Single Agent ReAct)).
+- `python -m pytest -q -m student -o addopts= -k "single and not workflow and not orchestrator and not swarm"`: 62 passed.
+- `src/reports/benchmark.json`: single 1.000 / 1.000, cost/success 37.85 VND, p95 7 bước.
+- Báo cáo cá nhân: `report/team/2A202603526_TaTienDung.md`.
+
+## 2A202603519_NguyenHoaThanhTung
+
+### Phần việc phụ trách
+
+- Kiến trúc C - orchestrator + handoff (`src/lab8/shapes/orchestrator.py`).
+- Crash suite, rà must-pass, benchmark 4 shape, tự kiểm hidden.
+- Bonus B3 (`src/bonus/`), demo Streamlit và slide (`demo_ui/`), tích hợp lên `main`, báo cáo nhóm.
+
+### Đóng góp cụ thể
+
+- Orchestrator dựng handoff bằng `make_handoff` với `facts={}` và `allowed_tools=["lookup_order"]`; investigator chỉ đọc; orchestrator tự quote từ order view và gọi `issue_refund` với quote đầy đủ và `crash_at`.
+- Bonus B3: `swarm_verified` thêm `verify_quote_inputs` đối chiếu `delay_days`, `status`, `damage_verified` với order row trước bước ghi; 10 claim đối kháng nhãn tính tay.
+- Chạy crash suite, benchmark, hidden self-check; điền ADR, research card (R2 - MAST), báo cáo nhóm, bonus report.
+
+### Bằng chứng
+
+- Commit: `b612394` (tích hợp orchestrator, bonus B3, reports, docs).
+- Test: `src/tests/test_bonus_swarm_verified.py` (44 test); ma trận student 248/248.
+- `src/reports/crash.json` 20/20; `src/reports/benchmark.json` orchestrator 1.000 / 1.000, 38.03 VND; `src/reports/hidden_selfcheck.json` 600 trial, 0 error, 0 leak.
+- Báo cáo cá nhân: `report/team/2A202603519_NguyenHoaThanhTung.md`.
