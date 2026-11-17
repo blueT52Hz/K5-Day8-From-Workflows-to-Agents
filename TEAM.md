@@ -12,7 +12,7 @@
 | STT | Họ tên           | MSSV        | Email                     | GitHub                                                                                                                                           | Vai trò                                       |
 | --: | ------------------ | ----------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
 |   1 | Nguyễn Hữu Đức | 2A202603429 | 26ai.ducnh3@vinuni.edu.vn | [@ducnguyen2112](https://github.com/ducnguyen2112) | Workflow, test retry/crash, tích hợp và ADR |
-|   2 | Tạ Tiến Dũng | 2A202603526 | | [@tiendung832005](https://github.com/tiendung832005) | Single agent (ReAct) |
+|   2 | Tạ Tiến Dũng | 2A202603526 |26ai.dungtt4@vinuni.edu.vn | [@tiendung832005](https://github.com/tiendung832005) | Single agent (ReAct) |
 |   3 | Nguyễn Hoa Thanh Tùng | 2A202603519 | 26ai.tungnht2@vinuni.edu.vn | [@bluet52hz](https://github.com/bluet52hz) | Orchestrator + handoff, crash suite, benchmark, bonus B3, demo/slide |
 
 ## Bảng đóng góp
@@ -75,6 +75,7 @@ Báo cáo đầy đủ của từng thành viên:
 - Quote lấy từ kết quả `compute_compensation` trên order row, không lấy số trong ticket; ticket chỉ là dữ liệu không tin cậy.
 - Host gọi `durability.issue_refund` với quote đầy đủ sau vòng lặp, truyền `crash_at`, chỉ bắt `InjectedCrash` để ghi trace rồi ném lại.
 - Trace ghi `react_step`, `observation` (visible, reason, số tiền đã hoàn), `quote`; không ghi ticket hay row thô.
+- | Tạ Tiến Dũng | Single agent (ReAct): `run_react` tối đa 8 bước, chỉ tool đọc, host ghi tiền | `705683c` (Implement Shape B) | `src/tests/test_single.py` (4 test) |
 
 ### Bằng chứng
 
@@ -82,6 +83,7 @@ Báo cáo đầy đủ của từng thành viên:
 - `python -m pytest -q -m student -o addopts= -k "single and not workflow and not orchestrator and not swarm"`: 62 passed.
 - `src/reports/benchmark.json`: single 1.000 / 1.000, cost/success 37.85 VND, p95 7 bước.
 - Báo cáo cá nhân: `report/team/2A202603526_TaTienDung.md`.
+- Test bổ sung: `src/tests/test_single.py` (4 test: luồng chuẩn, chống prompt injection/rò rỉ trace, nhánh `needs_info`/`escalated`, idempotency và crash/resume).
 
 ## 2A202603519_NguyenHoaThanhTung
 
