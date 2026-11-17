@@ -1,0 +1,93 @@
+{
+  "trace_dir": "traces",
+  "runs_total": 120,
+  "runs_verifier_checked": 110,
+  "interventions": 7,
+  "interventions_amount_changed": 6,
+  "override_runs": [
+    {
+      "run_id": "R-swarm_verified-B-001-s55",
+      "verifier_checked": true,
+      "override": true,
+      "fields": [
+        "delay_days"
+      ],
+      "before_vnd": 30000,
+      "after_vnd": 0,
+      "amount_changed": true,
+      "status": "denied"
+    },
+    {
+      "run_id": "R-swarm_verified-B-002-s55",
+      "verifier_checked": true,
+      "override": true,
+      "fields": [
+        "delay_days"
+      ],
+      "before_vnd": 0,
+      "after_vnd": 25000,
+      "amount_changed": true,
+      "status": "resolved"
+    },
+    {
+      "run_id": "R-swarm_verified-B-004-s55",
+      "verifier_checked": true,
+      "override": true,
+      "fields": [
+        "delay_days"
+      ],
+      "before_vnd": 20000,
+      "after_vnd": 0,
+      "amount_changed": true,
+      "status": "denied"
+    },
+    {
+      "run_id": "R-swarm_verified-B-006-s55",
+      "verifier_checked": true,
+      "override": true,
+      "fields": [
+        "delay_days"
+      ],
+      "before_vnd": 120000,
+      "after_vnd": 120000,
+      "amount_changed": false,
+      "status": "resolved"
+    },
+    {
+      "run_id": "R-swarm_verified-B-008-s55",
+      "verifier_checked": true,
+      "override": true,
+      "fields": [
+        "delay_days"
+      ],
+      "before_vnd": 40000,
+      "after_vnd": 0,
+      "amount_changed": true,
+      "status": "denied"
+    },
+    {
+      "run_id": "R-swarm_verified-B-009-s55",
+      "verifier_checked": true,
+      "override": true,
+      "fields": [
+        "delay_days"
+      ],
+      "before_vnd": 15000,
+      "after_vnd": 0,
+      "amount_changed": true,
+      "status": "denied"
+    },
+    {
+      "run_id": "R-swarm_verified-C-002-s55",
+      "verifier_checked": true,
+      "override": true,
+      "fields": [
+        "delay_days"
+      ],
+      "before_vnd": 20000,
+      "after_vnd": 0,
+      "amount_changed": true,
+      "status": "denied"
+    }
+  ]
+}

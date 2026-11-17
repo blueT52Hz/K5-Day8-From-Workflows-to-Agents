@@ -1,0 +1,202 @@
+/* Projector-first deck, blue as the dominant color.
+   Content slides: cool blue-white stage, navy ink, royal-blue accents.
+   Key slides (.blue): deep blue gradient with a faint technical grid, white type.
+   Green/red/amber stay reserved for pass/fail/warning only.
+   Fixed 1600x900 stage scaled to the window by slides.js. */
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap");
+
+:root {
+  --blue-950: #061440; --blue-900: #0A1F5C; --blue-800: #0B2A7A; --blue-700: #1340B8;
+  --blue-600: #1D4ED8; --blue-500: #3B6EF5; --blue-300: #9DB8FF; --blue-100: #DCE6FF; --blue-50: #EEF3FF;
+  --bg: #F6F8FD; --surface: #FFFFFF; --ink: #0B1633; --muted: #4A5675; --line: #D9E1F2;
+  --ok: #0E7A52; --ok-soft: #E0F4EA; --bad: #B8231A; --bad-soft: #FBE6E3;
+  --warn: #8F5400; --warn-soft: #FCEFD8;
+  --shadow: 0 1px 0 rgba(11, 22, 51, 0.04), 0 18px 40px -18px rgba(19, 64, 184, 0.28);
+  --font: "Geist", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  --mono: "Geist Mono", "Cascadia Mono", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; background: #DDE4F3; color: var(--ink); font-family: var(--font); }
+.viewport { position: fixed; inset: 0; display: grid; place-items: center; }
+.stage { position: relative; width: 1600px; height: 900px; flex: none; background: var(--bg);
+  overflow: hidden; box-shadow: 0 30px 80px rgba(10, 31, 92, 0.25); transform-origin: center center; }
+
+/* Slide shell: soft blue ambient glow so the stage never reads as flat white */
+.slide { position: absolute; inset: 0; padding: 84px 112px 120px; display: flex; flex-direction: column;
+  opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s;
+  background:
+    radial-gradient(900px 520px at 100% 0%, rgba(29, 78, 216, 0.11), transparent 62%),
+    radial-gradient(700px 420px at 0% 100%, rgba(29, 78, 216, 0.06), transparent 60%),
+    var(--bg); }
+.slide.is-active { opacity: 1; visibility: visible; }
+.reveal { opacity: 0; transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--d, 0) * 110ms); }
+.slide.is-active .reveal { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal, .slide { transition: none; } }
+
+/* Type scale: titles never wrap past 2 lines at 1600px */
+h1 { font-size: 84px; line-height: 1.03; letter-spacing: -0.04em; font-weight: 800; max-width: 1340px; }
+h2 { font-size: 62px; line-height: 1.06; letter-spacing: -0.035em; font-weight: 750; max-width: 1360px; color: var(--blue-900); }
+h2::before { content: ""; display: block; width: 72px; height: 8px; border-radius: 4px; margin-bottom: 26px;
+  background: linear-gradient(90deg, var(--blue-600), var(--blue-500)); }
+h3 { font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; font-weight: 700; color: var(--blue-900); }
+.lead { font-size: 30px; line-height: 1.4; color: var(--muted); max-width: 1180px; margin-top: 24px; }
+p, li, td, th { font-size: 26px; line-height: 1.45; }
+.muted { color: var(--muted); }
+code, .mono { font-family: var(--mono); font-size: 0.86em; }
+.accent { color: var(--blue-600); }
+.spacer { flex: 1; }
+
+/* Global chrome (slides.js adds .on-blue to the stage on blue slides) */
+.chrome { position: absolute; left: 112px; right: 112px; bottom: 40px; display: flex;
+  justify-content: space-between; align-items: center; font-size: 18px; color: var(--muted); z-index: 5;
+  transition: color 0.4s ease; }
+.chrome [data-counter] { font-family: var(--mono); color: var(--blue-700); font-weight: 500; }
+.progress { position: absolute; left: 0; bottom: 0; height: 6px; width: 0; z-index: 5;
+  background: linear-gradient(90deg, var(--blue-700), var(--blue-500)); transition: width 0.4s ease, background 0.4s; }
+.stage.on-blue .chrome, .stage.on-blue .chrome [data-counter] { color: rgba(255, 255, 255, 0.72); }
+.stage.on-blue .progress { background: #FFFFFF; }
+.demo-cue { position: absolute; right: 112px; bottom: 76px; display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(135deg, var(--blue-800), var(--blue-600)); color: #FFFFFF; border-radius: 999px;
+  padding: 14px 26px; font-size: 22px; font-weight: 700; box-shadow: 0 16px 36px -14px rgba(19, 64, 184, 0.6); }
+.demo-cue::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: #FFFFFF;
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.25); }
+.demo-cue span { color: var(--blue-100); font-family: var(--mono); font-size: 18px; font-weight: 500; }
+
+/* Building blocks */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 52px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 56px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 52px; }
+.card { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 22px;
+  padding: 34px 34px 30px; box-shadow: var(--shadow); overflow: hidden; }
+.card::after { content: ""; position: absolute; left: 0; top: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg, var(--blue-600), var(--blue-300)); }
+.card h3 { margin-bottom: 14px; }
+.card p { font-size: 23px; color: var(--muted); }
+.card .num { font-family: var(--mono); font-size: 20px; color: var(--blue-600); font-weight: 500; margin-bottom: 14px; }
+.card.ink { background: linear-gradient(150deg, var(--blue-800), var(--blue-600)); border-color: var(--blue-700); }
+.card.ink::after { display: none; }
+.card.ink h3 { color: #FFFFFF; }
+.card.ink p { color: var(--blue-100); }
+
+.tag { display: inline-block; padding: 4px 14px; border-radius: 999px; font-size: 20px; font-weight: 600;
+  white-space: nowrap; color: var(--muted); background: #EEF1F7; border: 1px solid #C9D2E5; }
+.tag.ok { color: var(--ok); background: var(--ok-soft); border-color: var(--ok); }
+.tag.bad { color: var(--bad); background: var(--bad-soft); border-color: var(--bad); }
+.tag.warn { color: var(--warn); background: var(--warn-soft); border-color: var(--warn); }
+.tag.info { color: var(--blue-700); background: var(--blue-50); border-color: var(--blue-600); }
+.todo { display: inline-block; font-family: var(--mono); font-size: 0.72em; color: var(--warn);
+  background: var(--warn-soft); border: 1.5px dashed var(--warn); border-radius: 10px; padding: 2px 12px; }
+
+/* Tables: blue header band, separate borders so the corners actually round */
+table.data { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 40px; background: var(--surface);
+  border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); }
+table.data th { text-align: left; font-size: 21px; color: #FFFFFF; font-weight: 600;
+  background: var(--blue-700); padding: 15px 20px; }
+table.data td { font-size: 23px; padding: 13px 20px; border-top: 1px solid var(--line); }
+table.data tbody tr:first-child td { border-top: none; }
+table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.data tr.hl td { background: var(--blue-50); font-weight: 600; }
+table.data tr.hl td:first-child { box-shadow: inset 6px 0 0 var(--blue-600); }
+/* Compact 5-column claim catalog: 7 rows must fit one 900px slide */
+table.data.claims { margin-top: 30px; }
+table.data.claims th { font-size: 18px; padding: 12px 16px; }
+table.data.claims td { font-size: 19px; line-height: 1.3; padding: 11px 16px; vertical-align: middle; }
+table.data.claims td.id { font-family: var(--mono); font-weight: 600; color: var(--blue-700); white-space: nowrap; }
+table.data.claims .tag { font-size: 16px; padding: 2px 10px; margin-right: 6px; }
+
+/* Denser 3-card row for text-heavy slides (bonus explainer) */
+.grid-3.compact .card { padding: 26px 28px 24px; }
+.grid-3.compact .card h3 { font-size: 28px; margin-bottom: 10px; }
+.grid-3.compact .card p { font-size: 20px; line-height: 1.4; }
+.grid-3.compact .card p + p { margin-top: 10px; }
+
+/* Numbered step list inside a card (retry walkthrough) */
+.steps { list-style: none; counter-reset: step; margin-top: 6px; }
+.steps li { counter-increment: step; position: relative; padding: 5px 0 5px 46px; font-size: 21px; line-height: 1.35;
+  color: var(--muted); border-bottom: 1px dashed var(--line); }
+.steps li:last-child { border-bottom: none; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 4px; width: 30px; height: 30px;
+  border-radius: 50%; display: grid; place-items: center; font-size: 17px; font-weight: 700;
+  background: var(--blue-100); color: var(--blue-800); }
+.steps li strong { color: var(--ink); }
+.steps li.bad { color: var(--bad); font-weight: 700; }
+.steps li.bad::before { background: var(--bad); color: #FFFFFF; }
+.steps li.ok { color: var(--ok); font-weight: 700; }
+.steps li.ok::before { background: var(--ok); color: #FFFFFF; }
+.card .db { margin-top: 14px; font-size: 21px; padding: 10px 14px; border-radius: 12px; background: var(--blue-50); color: var(--blue-900); }
+.card.ink .steps li { color: var(--blue-100); border-bottom-color: rgba(255, 255, 255, 0.2); }
+.card.ink .steps li strong { color: #FFFFFF; }
+.card.ink .steps li::before { background: rgba(255, 255, 255, 0.18); color: #FFFFFF; }
+.card.ink .steps li.ok { color: #A7F3C9; }
+.card.ink .steps li.ok::before { background: #A7F3C9; color: var(--blue-900); }
+.card.ink .db { background: rgba(255, 255, 255, 0.12); color: #FFFFFF; }
+
+/* Ticket -> result flow (problem slide) */
+.flow { display: flex; align-items: center; gap: 28px; margin-top: 56px; }
+.ticket { flex: 1.3; background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--blue-600);
+  border-radius: 18px; padding: 30px 34px; font-size: 30px; line-height: 1.4; box-shadow: var(--shadow); }
+.arrow { font-size: 54px; color: var(--blue-600); }
+.outcome { flex: 1; color: #FFFFFF; border-radius: 18px; padding: 30px 34px;
+  background: linear-gradient(140deg, var(--blue-900), var(--blue-600)); box-shadow: 0 22px 44px -18px rgba(19, 64, 184, 0.55); }
+.outcome .big { font-size: 64px; font-weight: 800; letter-spacing: -0.03em; }
+.facts { display: flex; gap: 0; margin-top: 64px; }
+.fact { flex: 1; padding: 0 36px; border-left: 2px solid var(--blue-100); }
+.fact:first-child { padding-left: 0; border-left: none; }
+.fact strong { display: block; font-size: 76px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--blue-600); }
+.fact span { font-size: 22px; color: var(--muted); }
+
+/* Autonomy ladder (four shapes) */
+.ladder .level { height: 10px; border-radius: 999px; background: var(--blue-100); margin-bottom: 22px; overflow: hidden; }
+.ladder .level i { display: block; height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--blue-500), var(--blue-800)); }
+.boundary { margin-top: 30px; display: flex; justify-content: space-between; align-items: center;
+  background: var(--surface); border: 2px dashed var(--blue-600); border-radius: 18px; padding: 20px 30px;
+  font-size: 26px; font-weight: 600; color: var(--blue-900); }
+.boundary .accent { font-family: var(--mono); font-size: 22px; background: var(--blue-600); color: #FFFFFF;
+  border-radius: 999px; padding: 6px 18px; }
+
+/* Durability lanes */
+.lane { display: flex; align-items: center; gap: 16px; margin-top: 30px; }
+.lane .label { width: 240px; font-size: 24px; font-weight: 700; color: var(--blue-900); }
+.node { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 20px;
+  font-size: 21px; min-width: 170px; text-align: center; box-shadow: var(--shadow); }
+.node.crash { border-color: var(--warn); background: var(--warn-soft); color: var(--warn); font-weight: 700; }
+.node.bad { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); font-weight: 700; }
+.node.ok { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); font-weight: 700; }
+.lane .sep { color: var(--blue-600); font-size: 28px; }
+.node small { display: block; margin-top: 4px; font-size: 16px; font-weight: 500; color: var(--muted); }
+.node.bad small, .node.ok small { color: inherit; opacity: 0.85; }
+
+/* Key slides: deep blue gradient + faint grid that fades out toward the edges */
+.slide.blue { color: #FFFFFF;
+  background:
+    radial-gradient(1000px 620px at 88% 8%, rgba(91, 141, 255, 0.55), transparent 60%),
+    radial-gradient(900px 560px at 0% 100%, rgba(3, 10, 36, 0.65), transparent 62%),
+    linear-gradient(135deg, var(--blue-950) 0%, var(--blue-800) 48%, var(--blue-600) 100%); }
+.slide.blue::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 80px 80px;
+  -webkit-mask-image: radial-gradient(900px 600px at 80% 20%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(900px 600px at 80% 20%, #000 20%, transparent 75%); }
+.slide.blue > * { position: relative; }
+.slide.blue h1, .slide.blue h2, .slide.blue h3 { color: #FFFFFF; }
+.slide.blue h2::before { background: #FFFFFF; }
+.slide.blue .lead, .slide.blue .muted { color: rgba(255, 255, 255, 0.78); }
+.slide.blue .card { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.22); box-shadow: none; }
+.slide.blue .card::after { background: linear-gradient(90deg, #FFFFFF, rgba(255, 255, 255, 0.2)); }
+.slide.blue .card p { color: rgba(255, 255, 255, 0.82); }
+.slide.blue .todo { color: #FFD58A; background: rgba(255, 213, 138, 0.12); border-color: #FFD58A; }
+
+/* Title and closing slides */
+.title-slide { justify-content: center; }
+.team { display: flex; gap: 40px; margin-top: 72px; }
+.team div { border-top: 3px solid currentColor; padding-top: 14px; min-width: 260px; }
+.team strong { display: block; font-size: 26px; }
+.team span { font-size: 21px; color: var(--muted); }
+.slide.blue .team span { color: var(--blue-100); }
+.quote { font-size: 92px; line-height: 1.02; letter-spacing: -0.045em; font-weight: 800; max-width: 1340px; }
+.quote em { font-style: normal; color: var(--blue-300); }
+.decision { font-size: 120px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; }
