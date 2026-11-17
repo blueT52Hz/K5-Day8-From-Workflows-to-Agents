@@ -19,8 +19,7 @@ Triển khai workflow; thêm test nghiệp vụ, approval, retry/crash; kiểm h
 - Phân biệt `denied` khi host từ chối và `failed` khi retry có amount conflict. Không bắt `InjectedCrash`; connection luôn đóng trong `finally`.
 - Trace chỉ ghi metadata và dữ liệu qua allowlist; không ghi ticket hoặc claim/order row thô.
 - `src/tests/test_workflow.py`: 21 trường hợp mới, gồm nhánh trả sớm, approval hỏng, trạng thái đơn không hợp lệ, policy tương lai, nhiều claim trên cùng đơn, conflict, ba điểm crash cho refund thường và top-up, cùng kiểm tra rò dữ liệu qua ticket.
-- Sinh `src/reports/crash.json`, `src/reports/workflow_baseline.json` bằng CLI và điền `decision_adr.md` ở trạng thái bản nháp.
-- Commit chính: chưa tạo commit; bổ sung hash thật sau khi rà thay đổi và commit.
+- Commit chính:
 
 ## 4. Bằng chứng
 
@@ -43,20 +42,6 @@ python -m lab8.benchmark --shapes workflow,swarm --cases data/public_claims.json
 - Swarm cùng điều kiện: 69/70 trial đúng, cost/success = 49.56695652173913 VND mô phỏng. C-002 seed 55 là trial sai của swarm.
 - Run id minh họa: `R-workflow-C-001-s11`, `R-workflow-C-002-s55`, `R-workflow-C-014-s55`.
 - Các report JSON là output của CLI, không sửa tay. Trace và SQLite không commit.
-
-Sau khi hai thành viên còn lại hoàn thiện shape, người tích hợp cần chạy:
-
-```powershell
-python -m pytest -q
-python -m pytest -q -m student -o addopts=
-python -m lab8.benchmark --shapes workflow,single,orchestrator,swarm --cases data/public_claims.jsonl --seeds 11,22,33,44,55 --out reports/benchmark.json
-python -m lab8.crash_test --count 20 --out reports/crash.json
-python -m lab8.check_submission
-```
-
-Nhóm dùng số liệu benchmark đủ bốn shape để chốt ADR, điền hash commit, research card và báo cáo chung. Chưa có kết quả hidden.
-
-Kiểm tra bài nộp ở thời điểm bàn giao phần 1: `check_submission` xác nhận workflow pass 12/12 claim một lần chạy ở seed 11 và crash report 20/20. Toàn repo còn `4 FAIL, 1 WARN`: single và orchestrator còn stub, thiếu benchmark đủ bốn shape, research card trống và thay đổi chưa commit. Những mục này cần hoàn tất khi tích hợp phần của hai thành viên còn lại; bài nhóm chưa sẵn sàng nộp.
 
 ## 5. Công cụ AI đã dùng
 
